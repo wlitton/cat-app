@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cat Critter Playground</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="hud">
+    <div class="title">Cat Critter Playground</div>
+    <div class="controls">
+      <div class="stat">Critters: <span id="critter-count">0</span></div>
+      <div class="stat">Splats: <span id="splat-count">0</span></div>
+      <button id="spawn-button" class="pill">Add more critters</button>
+      <button id="reset-button" class="pill">Reset</button>
+      <label class="pill toggle">
+        <input type="checkbox" id="auto-toggle" checked />
+        <span>Auto-spawn</span>
+      </label>
+    </div>
+    <p class="hint">Tap or swipe the bugs, flies, lizards, or mice to make them pop away. Perfect for curious paws.</p>
+  </div>
+  <canvas id="playfield" aria-label="Cat play field"></canvas>
+  <script src="app.js"></script>
+</body>
+</html>
