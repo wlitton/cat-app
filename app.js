@@ -7,10 +7,7 @@ const resetButton = document.getElementById("reset-button");
 const autoToggle = document.getElementById("auto-toggle");
 
 const CREATURE_TYPES = [
-  { name: "Glow fly", color: "#ffd166", accent: "#ff6b6b", size: 18, speed: 90, wobble: 25 },
-  { name: "Blue beetle", color: "#8ce3ff", accent: "#1dd3b0", size: 20, speed: 75, wobble: 18 },
-  { name: "Swift lizard", color: "#8cff98", accent: "#6ae28c", size: 26, speed: 65, wobble: 12 },
-  { name: "Pocket mouse", color: "#f6a6ff", accent: "#f875aa", size: 22, speed: 70, wobble: 16 },
+  { name: "Field mouse", color: "#cfd4db", accent: "#f7b6c5", size: 38, speed: 55, wobble: 10 },
 ];
 
 const critters = [];
@@ -19,7 +16,7 @@ let splatCount = 0;
 let lastTime = performance.now();
 let autoSpawn = true;
 let autoSpawnTimer = 0;
-const autoSpawnInterval = 950; // ms
+const autoSpawnInterval = 2400; // ms
 let width = 0;
 let height = 0;
 
@@ -41,7 +38,7 @@ function rand(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-function spawnCreatures(count = 3) {
+function spawnCreatures(count = 1) {
   for (let i = 0; i < count; i += 1) {
     const type = CREATURE_TYPES[Math.floor(Math.random() * CREATURE_TYPES.length)];
     const angle = rand(0, Math.PI * 2);
@@ -89,7 +86,7 @@ function update(deltaMs) {
 
   if (autoSpawn && autoSpawnTimer >= autoSpawnInterval) {
     autoSpawnTimer = 0;
-    spawnCreatures(1 + Math.floor(Math.random() * 2));
+    spawnCreatures(1);
   }
 
   critters.forEach((c, index) => {
@@ -144,28 +141,55 @@ function drawCreature(c) {
   const angle = Math.atan2(c.vy, c.vx);
   ctx.rotate(angle);
 
-  ctx.fillStyle = `${c.color}cc`;
+  // Body
+  ctx.fillStyle = `${c.color}e6`;
   ctx.beginPath();
-  ctx.ellipse(0, 0, c.size * 0.9, c.size * 0.6, 0, 0, Math.PI * 2);
+  ctx.ellipse(0, 0, c.size * 1.1, c.size * 0.75, 0, 0, Math.PI * 2);
   ctx.fill();
 
+  // Head
+  ctx.fillStyle = c.color;
+  ctx.beginPath();
+  ctx.ellipse(c.size * 0.9, 0, c.size * 0.65, c.size * 0.55, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Ears
   ctx.fillStyle = c.accent;
   ctx.beginPath();
-  ctx.ellipse(c.size * 0.4, 0, c.size * 0.4, c.size * 0.35, 0, 0, Math.PI * 2);
+  ctx.ellipse(c.size * 0.7, -c.size * 0.65, c.size * 0.35, c.size * 0.32, 0, 0, Math.PI * 2);
+  ctx.ellipse(c.size * 0.7, c.size * 0.65, c.size * 0.35, c.size * 0.32, 0, 0, Math.PI * 2);
   ctx.fill();
 
+  // Eye
   ctx.fillStyle = "#0c0f1c";
   ctx.beginPath();
-  ctx.arc(c.size * 0.6, -c.size * 0.1, c.size * 0.12, 0, Math.PI * 2);
+  ctx.arc(c.size * 1.2, -c.size * 0.15, c.size * 0.12, 0, Math.PI * 2);
   ctx.fill();
 
-  ctx.strokeStyle = "#fff7";
-  ctx.lineWidth = 2;
+  // Nose
+  ctx.fillStyle = c.accent;
   ctx.beginPath();
-  ctx.moveTo(-c.size * 0.2, -c.size * 0.6);
-  ctx.lineTo(c.size * 0.6, -c.size * 0.8);
-  ctx.moveTo(-c.size * 0.2, c.size * 0.6);
-  ctx.lineTo(c.size * 0.6, c.size * 0.8);
+  ctx.arc(c.size * 1.5, 0, c.size * 0.14, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Tail
+  ctx.strokeStyle = `${c.accent}dd`;
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(-c.size * 1.2, 0);
+  ctx.quadraticCurveTo(-c.size * 1.9, -c.size * 0.5, -c.size * 2.4, 0);
+  ctx.stroke();
+
+  // Whiskers
+  ctx.strokeStyle = "#fff6";
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(c.size * 1.6, -c.size * 0.2);
+  ctx.lineTo(c.size * 2.2, -c.size * 0.35);
+  ctx.moveTo(c.size * 1.6, 0);
+  ctx.lineTo(c.size * 2.2, 0);
+  ctx.moveTo(c.size * 1.6, c.size * 0.2);
+  ctx.lineTo(c.size * 2.2, c.size * 0.35);
   ctx.stroke();
 
   ctx.restore();
@@ -210,7 +234,7 @@ canvas.addEventListener("pointermove", (event) => {
   }
 });
 
-spawnButton.addEventListener("click", () => spawnCreatures(5));
+spawnButton.addEventListener("click", () => spawnCreatures(2));
 resetButton.addEventListener("click", () => {
   critters.splice(0, critters.length);
   splats.splice(0, splats.length);
@@ -221,5 +245,5 @@ autoToggle.addEventListener("change", (event) => {
   autoSpawn = event.target.checked;
 });
 
-spawnCreatures(10);
+spawnCreatures(3);
 requestAnimationFrame(loop);
