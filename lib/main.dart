@@ -28,6 +28,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  static const Color _miceScreenBackground = Color(0xFFE8F4FF);
   int _tapCount = 0;
 
   void _increment() {
@@ -71,10 +72,58 @@ class _HomePageState extends State<HomePage> {
               onPressed: _increment,
             ),
             const SizedBox(height: 12),
-            FilledButton.icon(
-              icon: const Icon(Icons.mouse),
-              label: const Text('Mice Clicker'),
-              onPressed: _openMiceClicker,
+            SizedBox(
+              width: 280,
+              height: 120,
+              child: FilledButton(
+                onPressed: _openMiceClicker,
+                style: FilledButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                child: Ink(
+                  decoration: BoxDecoration(
+                    color: _miceScreenBackground,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Opacity(
+                          opacity: 0.22,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 18),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: const [
+                                Icon(Icons.mouse, size: 36),
+                                SizedBox(width: 20),
+                                Icon(Icons.mouse, size: 36),
+                                SizedBox(width: 20),
+                                Icon(Icons.mouse, size: 36),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Center(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.mouse),
+                            SizedBox(width: 8),
+                            Text('Mice Clicker'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -102,6 +151,7 @@ class _MiceClickerScreenState extends State<MiceClickerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _HomePageState._miceScreenBackground,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
