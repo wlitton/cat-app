@@ -5,11 +5,6 @@ const closeMiceScreenButton = document.getElementById("close-mice-screen");
 
 const canvas = document.getElementById("playfield");
 const ctx = canvas.getContext("2d");
-const critterLabel = document.getElementById("critter-count");
-const splatLabel = document.getElementById("splat-count");
-const spawnButton = document.getElementById("spawn-button");
-const resetButton = document.getElementById("reset-button");
-const autoToggle = document.getElementById("auto-toggle");
 
 const CREATURE_TYPES = [
   { name: "Field mouse", color: "#cfd4db", accent: "#f7b6c5", size: 38, speed: 55, wobble: 10 },
@@ -79,8 +74,7 @@ function spawnCreatures(count = 1) {
 }
 
 function updateCounters() {
-  critterLabel.textContent = critters.length.toString();
-  splatLabel.textContent = splatCount.toString();
+  // Counters are still tracked for gameplay behavior, but hidden from the UI.
 }
 
 function handlePointer(event) {
@@ -272,17 +266,6 @@ canvas.addEventListener("pointermove", (event) => {
     handlePointer(event);
   }
 });
-spawnButton.addEventListener("click", () => spawnCreatures(2));
-resetButton.addEventListener("click", () => {
-  critters.splice(0, critters.length);
-  splats.splice(0, splats.length);
-  splatCount = 0;
-  updateCounters();
-});
-autoToggle.addEventListener("change", (event) => {
-  autoSpawn = event.target.checked;
-});
-
 updateCounters();
 setMiceScreenVisibility(false);
 requestAnimationFrame(loop);
