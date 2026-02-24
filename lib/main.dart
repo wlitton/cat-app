@@ -15,7 +15,50 @@ class CatApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const LoadScreen(),
+    );
+  }
+}
+
+class LoadScreen extends StatelessWidget {
+  const LoadScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Cat App')),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.pets, size: 96),
+            const SizedBox(height: 16),
+            Text(
+              'Choose a screen to explore',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 20),
+            FilledButton.icon(
+              icon: const Icon(Icons.mouse),
+              label: const Text('Go to Mice Screen'),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const MiceScreen()),
+                );
+              },
+            ),
+            const SizedBox(height: 8),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const HomePage()),
+                );
+              },
+              child: const Text('Open Cat Screen'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -65,6 +108,24 @@ class _HomePageState extends State<HomePage> {
               onPressed: _increment,
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class MiceScreen extends StatelessWidget {
+  const MiceScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Mice Screen')),
+      body: Center(
+        child: Text(
+          'Welcome to the mice screen!',
+          style: Theme.of(context).textTheme.headlineSmall,
+          textAlign: TextAlign.center,
         ),
       ),
     );
