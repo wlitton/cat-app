@@ -16,7 +16,10 @@ let splatCount = 0;
 let lastTime = performance.now();
 let autoSpawn = true;
 let autoSpawnTimer = 0;
+let emptyScreenTimer = null;
 const autoSpawnInterval = 2400; // ms
+const emptyScreenRespawnDelay = 1000; // ms
+const maxCritters = 3;
 let width = 0;
 let height = 0;
 
@@ -39,7 +42,10 @@ function rand(min, max) {
 }
 
 function spawnCreatures(count = 1) {
-  for (let i = 0; i < count; i += 1) {
+  const slotsAvailable = Math.max(maxCritters - critters.length, 0);
+  const spawnCount = Math.min(count, slotsAvailable);
+
+  for (let i = 0; i < spawnCount; i += 1) {
     const type = CREATURE_TYPES[Math.floor(Math.random() * CREATURE_TYPES.length)];
     const angle = rand(0, Math.PI * 2);
     const speed = type.speed * rand(0.8, 1.2);
@@ -87,6 +93,16 @@ function update(deltaMs) {
   if (autoSpawn && autoSpawnTimer >= autoSpawnInterval) {
     autoSpawnTimer = 0;
     spawnCreatures(1);
+  }
+
+  if (critters.length === 0) {
+    emptyScreenTimer = (emptyScreenTimer ?? 0) + deltaMs;
+    if (emptyScreenTimer >= emptyScreenRespawnDelay) {
+      spawnCreatures(1);
+      emptyScreenTimer = null;
+    }
+  } else {
+    emptyScreenTimer = null;
   }
 
   critters.forEach((c, index) => {
