@@ -102,17 +102,6 @@ class _MiceClickerScreenState extends State<MiceClickerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Mice Clicker'),
-        actions: [
-          IconButton(
-            tooltip: 'Close',
-            icon: const Icon(Icons.close),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
