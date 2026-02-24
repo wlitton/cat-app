@@ -23,6 +23,52 @@ body {
   touch-action: none;
 }
 
+.hidden {
+  display: none;
+}
+
+.home-screen {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  gap: 14px;
+  text-align: center;
+  z-index: 3;
+}
+
+.home-screen h1 {
+  margin: 0;
+}
+
+.home-screen p {
+  margin: 0;
+  opacity: 0.9;
+}
+
+.home-pill {
+  margin: 0 auto;
+  font-size: 18px;
+}
+
+.mice-screen {
+  position: fixed;
+  inset: 0;
+}
+
+.close-button {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  z-index: 4;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+}
+
 .hud {
   position: fixed;
   top: 16px;
