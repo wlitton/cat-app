@@ -15,50 +15,7 @@ class CatApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoadScreen(),
-    );
-  }
-}
-
-class LoadScreen extends StatelessWidget {
-  const LoadScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Cat App')),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.pets, size: 96),
-            const SizedBox(height: 16),
-            Text(
-              'Choose a screen to explore',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 20),
-            FilledButton.icon(
-              icon: const Icon(Icons.mouse),
-              label: const Text('Go to Mice Screen'),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const MiceScreen()),
-                );
-              },
-            ),
-            const SizedBox(height: 8),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const HomePage()),
-                );
-              },
-              child: const Text('Open Cat Screen'),
-            ),
-          ],
-        ),
-      ),
+      home: const HomePage(),
     );
   }
 }
@@ -79,11 +36,17 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _openMiceClicker() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const MiceClickerScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cat App Starter'),
+        title: const Text('Cat App Home'),
       ),
       body: Center(
         child: Column(
@@ -92,7 +55,7 @@ class _HomePageState extends State<HomePage> {
             const Icon(Icons.pets, size: 96),
             const SizedBox(height: 16),
             Text(
-              'Ready to ship to Android & iOS',
+              'Home screen',
               style: Theme.of(context).textTheme.titleMedium,
               textAlign: TextAlign.center,
             ),
@@ -107,6 +70,12 @@ class _HomePageState extends State<HomePage> {
               label: const Text('Increment'),
               onPressed: _increment,
             ),
+            const SizedBox(height: 12),
+            FilledButton.icon(
+              icon: const Icon(Icons.mouse),
+              label: const Text('Mice Clicker'),
+              onPressed: _openMiceClicker,
+            ),
           ],
         ),
       ),
@@ -114,18 +83,53 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class MiceScreen extends StatelessWidget {
-  const MiceScreen({super.key});
+class MiceClickerScreen extends StatefulWidget {
+  const MiceClickerScreen({super.key});
+
+  @override
+  State<MiceClickerScreen> createState() => _MiceClickerScreenState();
+}
+
+class _MiceClickerScreenState extends State<MiceClickerScreen> {
+  int _miceClicks = 0;
+
+  void _incrementMiceClicks() {
+    setState(() {
+      _miceClicks++;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mice Screen')),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Mice Clicker'),
+        actions: [
+          IconButton(
+            tooltip: 'Close',
+            icon: const Icon(Icons.close),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
       body: Center(
-        child: Text(
-          'Welcome to the mice screen!',
-          style: Theme.of(context).textTheme.headlineSmall,
-          textAlign: TextAlign.center,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.mouse, size: 96),
+            const SizedBox(height: 16),
+            Text(
+              'Mouse clicks: $_miceClicks',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.ads_click),
+              label: const Text('Click Mouse'),
+              onPressed: _incrementMiceClicks,
+            ),
+          ],
         ),
       ),
     );
