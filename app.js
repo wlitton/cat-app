@@ -1,3 +1,8 @@
+const homeScreen = document.getElementById("home-screen");
+const miceScreen = document.getElementById("mice-screen");
+const openMiceScreenButton = document.getElementById("open-mice-screen");
+const closeMiceScreenButton = document.getElementById("close-mice-screen");
+
 const canvas = document.getElementById("playfield");
 const ctx = canvas.getContext("2d");
 const critterLabel = document.getElementById("critter-count");
@@ -17,11 +22,12 @@ let lastTime = performance.now();
 let autoSpawn = true;
 let autoSpawnTimer = 0;
 let emptyScreenTimer = null;
-const autoSpawnInterval = 2400; // ms
-const emptyScreenRespawnDelay = 1000; // ms
+const autoSpawnInterval = 2400;
+const emptyScreenRespawnDelay = 1000;
 const maxCritters = 3;
 let width = 0;
 let height = 0;
+let isMiceScreenOpen = false;
 
 function resizeCanvas() {
   const dpr = window.devicePixelRatio || 1;
@@ -32,6 +38,17 @@ function resizeCanvas() {
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function setMiceScreenVisibility(visible) {
+  isMiceScreenOpen = visible;
+  homeScreen.classList.toggle("hidden", visible);
+  miceScreen.classList.toggle("hidden", !visible);
+  miceScreen.setAttribute("aria-hidden", String(!visible));
+
+  if (visible && critters.length === 0) {
+    spawnCreatures(3);
+  }
 }
 
 window.addEventListener("resize", resizeCanvas);
@@ -67,6 +84,10 @@ function updateCounters() {
 }
 
 function handlePointer(event) {
+  if (!isMiceScreenOpen) {
+    return;
+  }
+
   const rect = canvas.getBoundingClientRect();
   const x = event.clientX - rect.left;
   const y = event.clientY - rect.top;
@@ -87,6 +108,10 @@ function handlePointer(event) {
 }
 
 function update(deltaMs) {
+  if (!isMiceScreenOpen) {
+    return;
+  }
+
   const delta = deltaMs / 1000;
   autoSpawnTimer += deltaMs;
 
@@ -135,7 +160,6 @@ function update(deltaMs) {
       c.vy += rand(-50, 50);
     }
 
-    // Remove critters that somehow leave the scene to avoid runaway arrays.
     if (c.x < -50 || c.x > width + 50 || c.y < -50 || c.y > height + 50) {
       critters.splice(index, 1);
     }
@@ -157,38 +181,32 @@ function drawCreature(c) {
   const angle = Math.atan2(c.vy, c.vx);
   ctx.rotate(angle);
 
-  // Body
   ctx.fillStyle = `${c.color}e6`;
   ctx.beginPath();
   ctx.ellipse(0, 0, c.size * 1.1, c.size * 0.75, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Head
   ctx.fillStyle = c.color;
   ctx.beginPath();
   ctx.ellipse(c.size * 0.9, 0, c.size * 0.65, c.size * 0.55, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Ears
   ctx.fillStyle = c.accent;
   ctx.beginPath();
   ctx.ellipse(c.size * 0.7, -c.size * 0.65, c.size * 0.35, c.size * 0.32, 0, 0, Math.PI * 2);
   ctx.ellipse(c.size * 0.7, c.size * 0.65, c.size * 0.35, c.size * 0.32, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Eye
   ctx.fillStyle = "#0c0f1c";
   ctx.beginPath();
   ctx.arc(c.size * 1.2, -c.size * 0.15, c.size * 0.12, 0, Math.PI * 2);
   ctx.fill();
 
-  // Nose
   ctx.fillStyle = c.accent;
   ctx.beginPath();
   ctx.arc(c.size * 1.5, 0, c.size * 0.14, 0, Math.PI * 2);
   ctx.fill();
 
-  // Tail
   ctx.strokeStyle = `${c.accent}dd`;
   ctx.lineWidth = 6;
   ctx.beginPath();
@@ -196,7 +214,6 @@ function drawCreature(c) {
   ctx.quadraticCurveTo(-c.size * 1.9, -c.size * 0.5, -c.size * 2.4, 0);
   ctx.stroke();
 
-  // Whiskers
   ctx.strokeStyle = "#fff6";
   ctx.lineWidth = 2.5;
   ctx.beginPath();
@@ -213,6 +230,10 @@ function drawCreature(c) {
 
 function draw() {
   ctx.clearRect(0, 0, width, height);
+
+  if (!isMiceScreenOpen) {
+    return;
+  }
 
   const gradient = ctx.createLinearGradient(0, 0, width, height);
   gradient.addColorStop(0, "rgba(255, 209, 102, 0.12)");
@@ -243,13 +264,14 @@ function loop(now) {
   requestAnimationFrame(loop);
 }
 
+openMiceScreenButton.addEventListener("click", () => setMiceScreenVisibility(true));
+closeMiceScreenButton.addEventListener("click", () => setMiceScreenVisibility(false));
 canvas.addEventListener("pointerdown", handlePointer);
 canvas.addEventListener("pointermove", (event) => {
   if (event.pressure > 0 || event.buttons) {
     handlePointer(event);
   }
 });
-
 spawnButton.addEventListener("click", () => spawnCreatures(2));
 resetButton.addEventListener("click", () => {
   critters.splice(0, critters.length);
@@ -261,5 +283,6 @@ autoToggle.addEventListener("change", (event) => {
   autoSpawn = event.target.checked;
 });
 
-spawnCreatures(3);
+updateCounters();
+setMiceScreenVisibility(false);
 requestAnimationFrame(loop);
