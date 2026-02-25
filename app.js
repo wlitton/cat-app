@@ -1,16 +1,21 @@
 const homeScreen = document.getElementById("home-screen");
 const miceScreen = document.getElementById("mice-screen");
 const bugsScreen = document.getElementById("bugs-screen");
+const lizardsScreen = document.getElementById("lizards-screen");
 
 const openMiceScreenButton = document.getElementById("open-mice-screen");
 const openBugsScreenButton = document.getElementById("open-bugs-screen");
+const openLizardsScreenButton = document.getElementById("open-lizards-screen");
 const closeMiceScreenButton = document.getElementById("close-mice-screen");
 const closeBugsScreenButton = document.getElementById("close-bugs-screen");
+const closeLizardsScreenButton = document.getElementById("close-lizards-screen");
 
 const miceCanvas = document.getElementById("mice-playfield");
 const bugsCanvas = document.getElementById("bugs-playfield");
+const lizardsCanvas = document.getElementById("lizards-playfield");
 const miceCtx = miceCanvas.getContext("2d");
 const bugsCtx = bugsCanvas.getContext("2d");
+const lizardsCtx = lizardsCanvas.getContext("2d");
 
 const CREATURE_TYPES = {
   mice: [
@@ -18,6 +23,9 @@ const CREATURE_TYPES = {
   ],
   bugs: [
     { name: "Ladybug", color: "#ef476f", accent: "#111827", size: 30, speed: 70, wobble: 15 },
+  ],
+  lizards: [
+    { name: "Gecko", color: "#7fd66e", accent: "#285b29", size: 34, speed: 60, wobble: 12 },
   ],
 };
 
@@ -50,6 +58,7 @@ function resizeCanvas(canvas, ctx) {
 function resizeAllCanvases() {
   resizeCanvas(miceCanvas, miceCtx);
   resizeCanvas(bugsCanvas, bugsCtx);
+  resizeCanvas(lizardsCanvas, lizardsCtx);
 }
 
 function setScreenVisibility(screen) {
@@ -66,8 +75,20 @@ function setScreenVisibility(screen) {
   bugsScreen.classList.toggle("hidden", !showBugs);
   bugsScreen.setAttribute("aria-hidden", String(!showBugs));
 
-  activeCanvas = showBugs ? bugsCanvas : miceCanvas;
-  activeCtx = showBugs ? bugsCtx : miceCtx;
+  const showLizards = screen === "lizards";
+  lizardsScreen.classList.toggle("hidden", !showLizards);
+  lizardsScreen.setAttribute("aria-hidden", String(!showLizards));
+
+  if (showBugs) {
+    activeCanvas = bugsCanvas;
+    activeCtx = bugsCtx;
+  } else if (showLizards) {
+    activeCanvas = lizardsCanvas;
+    activeCtx = lizardsCtx;
+  } else {
+    activeCanvas = miceCanvas;
+    activeCtx = miceCtx;
+  }
 
   critters.length = 0;
   splats.length = 0;
@@ -309,6 +330,31 @@ function drawLadybug(c) {
   activeCtx.stroke();
 }
 
+function drawLizard(c) {
+  activeCtx.fillStyle = c.color;
+  activeCtx.beginPath();
+  activeCtx.ellipse(0, 0, c.size * 1.2, c.size * 0.5, 0, 0, Math.PI * 2);
+  activeCtx.fill();
+
+  activeCtx.beginPath();
+  activeCtx.ellipse(c.size * 1.1, 0, c.size * 0.42, c.size * 0.35, 0, 0, Math.PI * 2);
+  activeCtx.fill();
+
+  activeCtx.fillStyle = c.accent;
+  activeCtx.beginPath();
+  activeCtx.arc(c.size * 1.3, -c.size * 0.1, c.size * 0.07, 0, Math.PI * 2);
+  activeCtx.arc(c.size * 1.3, c.size * 0.1, c.size * 0.07, 0, Math.PI * 2);
+  activeCtx.fill();
+
+  activeCtx.strokeStyle = c.accent;
+  activeCtx.lineWidth = 5;
+  activeCtx.beginPath();
+  activeCtx.moveTo(-c.size * 1.1, 0);
+  activeCtx.quadraticCurveTo(-c.size * 1.8, -c.size * 0.5, -c.size * 2.2, 0);
+  activeCtx.quadraticCurveTo(-c.size * 1.8, c.size * 0.5, -c.size * 1.1, 0);
+  activeCtx.stroke();
+}
+
 function drawCreature(c) {
   activeCtx.save();
   activeCtx.translate(c.x, c.y);
@@ -317,6 +363,8 @@ function drawCreature(c) {
 
   if (activeScreen === "bugs") {
     drawLadybug(c);
+  } else if (activeScreen === "lizards") {
+    drawLizard(c);
   } else {
     drawMouse(c);
   }
@@ -327,6 +375,7 @@ function drawCreature(c) {
 function draw() {
   miceCtx.clearRect(0, 0, width, height);
   bugsCtx.clearRect(0, 0, width, height);
+  lizardsCtx.clearRect(0, 0, width, height);
 
   if (!activeScreen) {
     return;
@@ -337,6 +386,10 @@ function draw() {
     gradient.addColorStop(0, "rgba(240, 113, 103, 0.16)");
     gradient.addColorStop(0.5, "rgba(255, 193, 7, 0.12)");
     gradient.addColorStop(1, "rgba(52, 120, 246, 0.08)");
+  } else if (activeScreen === "lizards") {
+    gradient.addColorStop(0, "rgba(127, 214, 110, 0.16)");
+    gradient.addColorStop(0.5, "rgba(163, 230, 53, 0.1)");
+    gradient.addColorStop(1, "rgba(45, 114, 83, 0.1)");
   } else {
     gradient.addColorStop(0, "rgba(255, 209, 102, 0.12)");
     gradient.addColorStop(0.5, "rgba(140, 227, 255, 0.08)");
@@ -370,8 +423,10 @@ function loop(now) {
 
 openMiceScreenButton.addEventListener("click", () => setScreenVisibility("mice"));
 openBugsScreenButton.addEventListener("click", () => setScreenVisibility("bugs"));
+openLizardsScreenButton.addEventListener("click", () => setScreenVisibility("lizards"));
 closeMiceScreenButton.addEventListener("click", () => setScreenVisibility(null));
 closeBugsScreenButton.addEventListener("click", () => setScreenVisibility(null));
+closeLizardsScreenButton.addEventListener("click", () => setScreenVisibility(null));
 
 miceCanvas.addEventListener("pointerdown", handlePointer);
 miceCanvas.addEventListener("pointermove", (event) => {
@@ -382,6 +437,13 @@ miceCanvas.addEventListener("pointermove", (event) => {
 
 bugsCanvas.addEventListener("pointerdown", handlePointer);
 bugsCanvas.addEventListener("pointermove", (event) => {
+  if (event.pressure > 0 || event.buttons) {
+    handlePointer(event);
+  }
+});
+
+lizardsCanvas.addEventListener("pointerdown", handlePointer);
+lizardsCanvas.addEventListener("pointermove", (event) => {
   if (event.pressure > 0 || event.buttons) {
     handlePointer(event);
   }
