@@ -200,12 +200,7 @@ function update(deltaMs) {
   }
 }
 
-function drawCreature(c) {
-  activeCtx.save();
-  activeCtx.translate(c.x, c.y);
-  const angle = Math.atan2(c.vy, c.vx);
-  activeCtx.rotate(angle);
-
+function drawMouse(c) {
   activeCtx.fillStyle = `${c.color}e6`;
   activeCtx.beginPath();
   activeCtx.ellipse(0, 0, c.size * 1.1, c.size * 0.75, 0, 0, Math.PI * 2);
@@ -249,6 +244,82 @@ function drawCreature(c) {
   activeCtx.moveTo(c.size * 1.6, c.size * 0.2);
   activeCtx.lineTo(c.size * 2.2, c.size * 0.35);
   activeCtx.stroke();
+}
+
+function drawLadybug(c) {
+  // Shell
+  activeCtx.fillStyle = c.color;
+  activeCtx.beginPath();
+  activeCtx.ellipse(0, 0, c.size * 1.05, c.size * 0.9, 0, 0, Math.PI * 2);
+  activeCtx.fill();
+
+  // Head
+  activeCtx.fillStyle = c.accent;
+  activeCtx.beginPath();
+  activeCtx.arc(c.size * 0.92, 0, c.size * 0.34, 0, Math.PI * 2);
+  activeCtx.fill();
+
+  // Wing split
+  activeCtx.strokeStyle = `${c.accent}ee`;
+  activeCtx.lineWidth = 3;
+  activeCtx.beginPath();
+  activeCtx.moveTo(-c.size * 0.95, 0);
+  activeCtx.lineTo(c.size * 0.7, 0);
+  activeCtx.stroke();
+
+  // Spots
+  activeCtx.fillStyle = c.accent;
+  const spots = [
+    [-0.35, -0.4],
+    [-0.35, 0.4],
+    [0.15, -0.5],
+    [0.15, 0.5],
+    [0.5, -0.25],
+    [0.5, 0.25],
+  ];
+
+  spots.forEach(([sx, sy]) => {
+    activeCtx.beginPath();
+    activeCtx.arc(c.size * sx, c.size * sy, c.size * 0.16, 0, Math.PI * 2);
+    activeCtx.fill();
+  });
+
+  // Antennae
+  activeCtx.strokeStyle = `${c.accent}dd`;
+  activeCtx.lineWidth = 2;
+  activeCtx.beginPath();
+  activeCtx.moveTo(c.size * 1.1, -c.size * 0.12);
+  activeCtx.quadraticCurveTo(c.size * 1.45, -c.size * 0.45, c.size * 1.62, -c.size * 0.75);
+  activeCtx.moveTo(c.size * 1.1, c.size * 0.12);
+  activeCtx.quadraticCurveTo(c.size * 1.45, c.size * 0.45, c.size * 1.62, c.size * 0.75);
+  activeCtx.stroke();
+
+  // Tiny feet
+  activeCtx.strokeStyle = `${c.accent}bb`;
+  activeCtx.lineWidth = 1.6;
+  activeCtx.beginPath();
+  activeCtx.moveTo(-c.size * 0.45, -c.size * 0.82);
+  activeCtx.lineTo(-c.size * 0.55, -c.size * 1.0);
+  activeCtx.moveTo(-c.size * 0.05, -c.size * 0.9);
+  activeCtx.lineTo(-c.size * 0.1, -c.size * 1.08);
+  activeCtx.moveTo(-c.size * 0.45, c.size * 0.82);
+  activeCtx.lineTo(-c.size * 0.55, c.size * 1.0);
+  activeCtx.moveTo(-c.size * 0.05, c.size * 0.9);
+  activeCtx.lineTo(-c.size * 0.1, c.size * 1.08);
+  activeCtx.stroke();
+}
+
+function drawCreature(c) {
+  activeCtx.save();
+  activeCtx.translate(c.x, c.y);
+  const angle = Math.atan2(c.vy, c.vx);
+  activeCtx.rotate(angle);
+
+  if (activeScreen === "bugs") {
+    drawLadybug(c);
+  } else {
+    drawMouse(c);
+  }
 
   activeCtx.restore();
 }
