@@ -61,8 +61,13 @@ body {
   background: linear-gradient(120deg, #8ce3ff, #56cfe1);
 }
 
+.lizards-pill {
+  background: linear-gradient(120deg, #9be564, #7fd66e);
+}
+
 .mice-screen,
-.bugs-screen {
+.bugs-screen,
+.lizards-screen {
   position: fixed;
   inset: 0;
 }
@@ -98,7 +103,8 @@ body {
 }
 
 #mice-playfield,
-#bugs-playfield {
+#bugs-playfield,
+#lizards-playfield {
   position: fixed;
   inset: 0;
   width: 100vw;
