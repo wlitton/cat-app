@@ -86,30 +86,30 @@ class _HomePageState extends State<HomePage> {
               onPressed: _increment,
             ),
             const SizedBox(height: 12),
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 12,
-              runSpacing: 12,
+            Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _ClickerButton(
-                  width: 200,
-                  height: 120,
+                  width: 320,
+                  height: 140,
                   backgroundColor: _miceScreenBackground,
                   icon: Icons.mouse,
                   label: 'Mice Clicker',
                   onPressed: _openMiceClicker,
                 ),
+                const SizedBox(height: 14),
                 _ClickerButton(
-                  width: 200,
-                  height: 120,
+                  width: 320,
+                  height: 140,
                   backgroundColor: _bugsScreenBackground,
                   icon: Icons.bug_report,
                   label: 'Bugs Clicker',
                   onPressed: _openBugsClicker,
                 ),
+                const SizedBox(height: 14),
                 _ClickerButton(
-                  width: 200,
-                  height: 120,
+                  width: 320,
+                  height: 140,
                   backgroundColor: _lizardsScreenBackground,
                   icon: Icons.pets,
                   label: 'Lizards Clicker',
@@ -143,12 +143,16 @@ class _ClickerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color iconPreviewColor = Colors.white.withValues(alpha: 0.16);
+
     return SizedBox(
       width: width,
       height: height,
       child: FilledButton(
         onPressed: onPressed,
         style: FilledButton.styleFrom(
+          backgroundColor: backgroundColor,
+          foregroundColor: Colors.white,
           padding: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -156,38 +160,44 @@ class _ClickerButton extends StatelessWidget {
         ),
         child: Ink(
           decoration: BoxDecoration(
-            color: backgroundColor,
+            gradient: LinearGradient(
+              colors: [
+                backgroundColor.withValues(alpha: 0.85),
+                backgroundColor.withValues(alpha: 1),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: Opacity(
-                  opacity: 0.22,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 18),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(icon, size: 36),
-                        const SizedBox(width: 20),
-                        Icon(icon, size: 36),
-                        const SizedBox(width: 20),
-                        Icon(icon, size: 36),
-                      ],
-                    ),
-                  ),
-                ),
+              Positioned(
+                top: -12,
+                right: -12,
+                child: Icon(icon, size: 120, color: iconPreviewColor),
+              ),
+              Positioned(
+                bottom: -24,
+                left: 10,
+                child: Icon(icon, size: 92, color: iconPreviewColor),
               ),
               Center(
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(icon),
-                    const SizedBox(width: 8),
-                    Text(label),
+                    Icon(icon, size: 32, color: Colors.white),
+                    const SizedBox(width: 10),
+                    Text(
+                      label,
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.2,
+                          ),
+                    ),
                   ],
                 ),
               ),
