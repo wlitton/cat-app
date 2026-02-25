@@ -10,12 +10,20 @@
   <main id="home-screen" class="home-screen">
     <h1>Cat Mouse Playground</h1>
     <p>Choose where to go first.</p>
-    <button id="open-mice-screen" class="pill home-pill">Mice</button>
+    <div class="home-actions">
+      <button id="open-mice-screen" class="pill home-pill">Mice</button>
+      <button id="open-bugs-screen" class="pill home-pill bugs-pill">Bugs</button>
+    </div>
   </main>
 
   <section id="mice-screen" class="mice-screen hidden" aria-hidden="true">
     <button id="close-mice-screen" class="close-button" aria-label="Back to home screen">✕</button>
-    <canvas id="playfield" aria-label="Cat play field"></canvas>
+    <canvas id="mice-playfield" aria-label="Cat mice play field"></canvas>
+  </section>
+
+  <section id="bugs-screen" class="bugs-screen hidden" aria-hidden="true">
+    <button id="close-bugs-screen" class="close-button" aria-label="Back to home screen">✕</button>
+    <canvas id="bugs-playfield" aria-label="Cat bugs play field"></canvas>
   </section>
 
   <script src="app.js"></script>
