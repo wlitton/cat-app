@@ -30,6 +30,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   static const Color _miceScreenBackground = Color(0xFFE8F4FF);
   static const Color _bugsScreenBackground = Color(0xFFFFF3E0);
+  static const Color _lizardsScreenBackground = Color(0xFFE8F8EC);
   int _tapCount = 0;
 
   void _increment() {
@@ -47,6 +48,12 @@ class _HomePageState extends State<HomePage> {
   void _openBugsClicker() {
     Navigator.of(context).push(
       MaterialPageRoute(builder: (_) => const LadybugsClickerScreen()),
+    );
+  }
+
+  void _openLizardsClicker() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const LizardsClickerScreen()),
     );
   }
 
@@ -99,6 +106,14 @@ class _HomePageState extends State<HomePage> {
                   icon: Icons.bug_report,
                   label: 'Bugs Clicker',
                   onPressed: _openBugsClicker,
+                ),
+                _ClickerButton(
+                  width: 200,
+                  height: 120,
+                  backgroundColor: _lizardsScreenBackground,
+                  icon: Icons.pets,
+                  label: 'Lizards Clicker',
+                  onPressed: _openLizardsClicker,
                 ),
               ],
             ),
@@ -262,6 +277,49 @@ class _LadybugsClickerScreenState extends State<LadybugsClickerScreen> {
               icon: const Icon(Icons.ads_click),
               label: const Text('Click Ladybug'),
               onPressed: _incrementLadybugClicks,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LizardsClickerScreen extends StatefulWidget {
+  const LizardsClickerScreen({super.key});
+
+  @override
+  State<LizardsClickerScreen> createState() => _LizardsClickerScreenState();
+}
+
+class _LizardsClickerScreenState extends State<LizardsClickerScreen> {
+  int _lizardClicks = 0;
+
+  void _incrementLizardClicks() {
+    setState(() {
+      _lizardClicks++;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: _HomePageState._lizardsScreenBackground,
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.pets, size: 96),
+            const SizedBox(height: 16),
+            Text(
+              'Lizard clicks: $_lizardClicks',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.ads_click),
+              label: const Text('Click Lizard'),
+              onPressed: _incrementLizardClicks,
             ),
           ],
         ),
