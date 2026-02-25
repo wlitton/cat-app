@@ -331,27 +331,87 @@ function drawLadybug(c) {
 }
 
 function drawLizard(c) {
+  // Tail
+  activeCtx.strokeStyle = "#4f8f4b";
+  activeCtx.lineWidth = 7;
+  activeCtx.lineCap = "round";
+  activeCtx.beginPath();
+  activeCtx.moveTo(-c.size * 1.05, 0);
+  activeCtx.quadraticCurveTo(-c.size * 1.85, -c.size * 0.55, -c.size * 2.4, -c.size * 0.08);
+  activeCtx.quadraticCurveTo(-c.size * 2.05, c.size * 0.38, -c.size * 1.45, c.size * 0.12);
+  activeCtx.stroke();
+
+  // Body
   activeCtx.fillStyle = c.color;
   activeCtx.beginPath();
-  activeCtx.ellipse(0, 0, c.size * 1.2, c.size * 0.5, 0, 0, Math.PI * 2);
+  activeCtx.ellipse(0, 0, c.size * 1.22, c.size * 0.52, 0, 0, Math.PI * 2);
   activeCtx.fill();
 
+  // Neck + head
+  activeCtx.fillStyle = "#90df79";
   activeCtx.beginPath();
-  activeCtx.ellipse(c.size * 1.1, 0, c.size * 0.42, c.size * 0.35, 0, 0, Math.PI * 2);
+  activeCtx.ellipse(c.size * 0.75, 0, c.size * 0.42, c.size * 0.3, 0, 0, Math.PI * 2);
   activeCtx.fill();
 
+  activeCtx.fillStyle = c.color;
+  activeCtx.beginPath();
+  activeCtx.ellipse(c.size * 1.25, 0, c.size * 0.54, c.size * 0.34, 0, 0, Math.PI * 2);
+  activeCtx.fill();
+
+  // Arms and legs
+  const limbs = [
+    { x: c.size * 0.5, y: -c.size * 0.34, fx: c.size * 0.95, fy: -c.size * 0.7 },
+    { x: c.size * 0.5, y: c.size * 0.34, fx: c.size * 0.95, fy: c.size * 0.7 },
+    { x: -c.size * 0.45, y: -c.size * 0.34, fx: -c.size * 0.85, fy: -c.size * 0.7 },
+    { x: -c.size * 0.45, y: c.size * 0.34, fx: -c.size * 0.85, fy: c.size * 0.7 },
+  ];
+
+  activeCtx.strokeStyle = "#3f7a40";
+  activeCtx.lineWidth = 4;
+  activeCtx.lineCap = "round";
+  limbs.forEach((limb) => {
+    activeCtx.beginPath();
+    activeCtx.moveTo(limb.x, limb.y);
+    activeCtx.quadraticCurveTo(
+      (limb.x + limb.fx) * 0.5,
+      limb.y,
+      limb.fx,
+      limb.fy,
+    );
+    activeCtx.stroke();
+
+    // Small toes
+    activeCtx.beginPath();
+    activeCtx.moveTo(limb.fx, limb.fy);
+    activeCtx.lineTo(limb.fx + c.size * 0.16, limb.fy);
+    activeCtx.moveTo(limb.fx, limb.fy);
+    activeCtx.lineTo(limb.fx + c.size * 0.08, limb.fy + (limb.fy > 0 ? c.size * 0.12 : -c.size * 0.12));
+    activeCtx.moveTo(limb.fx, limb.fy);
+    activeCtx.lineTo(limb.fx - c.size * 0.08, limb.fy + (limb.fy > 0 ? c.size * 0.12 : -c.size * 0.12));
+    activeCtx.stroke();
+  });
+
+  // Dorsal pattern
+  activeCtx.strokeStyle = "#5ca65a";
+  activeCtx.lineWidth = 2;
+  activeCtx.beginPath();
+  activeCtx.moveTo(-c.size * 0.95, 0);
+  activeCtx.quadraticCurveTo(-c.size * 0.2, -c.size * 0.28, c.size * 0.75, 0);
+  activeCtx.quadraticCurveTo(-c.size * 0.2, c.size * 0.28, -c.size * 0.95, 0);
+  activeCtx.stroke();
+
+  // Eyes + smile
   activeCtx.fillStyle = c.accent;
   activeCtx.beginPath();
-  activeCtx.arc(c.size * 1.3, -c.size * 0.1, c.size * 0.07, 0, Math.PI * 2);
-  activeCtx.arc(c.size * 1.3, c.size * 0.1, c.size * 0.07, 0, Math.PI * 2);
+  activeCtx.arc(c.size * 1.45, -c.size * 0.11, c.size * 0.07, 0, Math.PI * 2);
+  activeCtx.arc(c.size * 1.45, c.size * 0.11, c.size * 0.07, 0, Math.PI * 2);
   activeCtx.fill();
 
-  activeCtx.strokeStyle = c.accent;
-  activeCtx.lineWidth = 5;
+  activeCtx.strokeStyle = "#285b29";
+  activeCtx.lineWidth = 2;
   activeCtx.beginPath();
-  activeCtx.moveTo(-c.size * 1.1, 0);
-  activeCtx.quadraticCurveTo(-c.size * 1.8, -c.size * 0.5, -c.size * 2.2, 0);
-  activeCtx.quadraticCurveTo(-c.size * 1.8, c.size * 0.5, -c.size * 1.1, 0);
+  activeCtx.moveTo(c.size * 1.58, -c.size * 0.06);
+  activeCtx.quadraticCurveTo(c.size * 1.75, 0, c.size * 1.58, c.size * 0.06);
   activeCtx.stroke();
 }
 
