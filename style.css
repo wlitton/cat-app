@@ -51,7 +51,18 @@ body {
   font-size: 18px;
 }
 
-.mice-screen {
+.home-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.bugs-pill {
+  background: linear-gradient(120deg, #8ce3ff, #56cfe1);
+}
+
+.mice-screen,
+.bugs-screen {
   position: fixed;
   inset: 0;
 }
@@ -86,11 +97,11 @@ body {
   box-shadow: 0 12px 26px rgba(0, 0, 0, 0.3);
 }
 
-#playfield {
+#mice-playfield,
+#bugs-playfield {
   position: fixed;
   inset: 0;
   width: 100vw;
   height: 100vh;
   z-index: 1;
 }
-
